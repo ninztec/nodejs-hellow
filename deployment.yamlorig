@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: helloworld
-        image: "${DOCKERHUB_USERNAME}/${APP_NAME}:${IMAGE_TAG}"
+        image: rjshk013/node-hellow
         ports:
         - containerPort: 8000
        
