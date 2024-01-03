@@ -38,10 +38,9 @@ pipeline {
         stage("Kubernetes Deployment") {
             steps {
                 script {
-                    sh 'sudo kubectl apply -f deployment.yaml'
+                    sh 'sudo helm upgrade nodejs-app nodejs -f nodejs/dev-values.yaml'
                 }
             }
         }
     }
 }
-
