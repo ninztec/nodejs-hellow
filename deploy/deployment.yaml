@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: helloworld
-        image: rjshk013/gitops-demo-app:v1
+        image: rjshk013/gitops-demo-app:17
         ports:
         - containerPort: 8000
        
