@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: helloworld
-        image: "${DOCKERHUB_USERNAME}/${APP_NAME}:${IMAGE_TAG}"
+        image: rjshk013/gitops-demo-app:v1
         ports:
         - containerPort: 8000
        
