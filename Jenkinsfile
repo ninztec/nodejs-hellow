@@ -1,5 +1,11 @@
 pipeline {
     agent any
+    environment{
+        DOCKERHUB_USERNAME = "rjshk013"
+        APP_NAME = "gitops-demo-app"
+        IMAGE_TAG = "${BUILD_NUMBER}"
+        IMAGE_NAME = "${DOCKERHUB_USERNAME}" + "/" + "${APP_NAME}"
+    }
     
     stages {
         stage("Git Clone") {
@@ -11,7 +17,7 @@ pipeline {
         stage("Build") {
             steps {
                 script {
-                    sh 'docker build . -t rjshk013/node-hellow:latest'
+                    docker_image = docker.build "${IMAGE_NAME}"
                     sh 'docker image list'
                 }
             }
@@ -30,7 +36,8 @@ pipeline {
         stage("Push Image to Docker Hub") {
             steps {
                 script {
-                    sh 'docker push rjshk013/node-hellow:latest'
+                        docker_image.push("${BUILD_NUMBER}")
+                        docker_image.push('latest')
                 }
             }
         }
