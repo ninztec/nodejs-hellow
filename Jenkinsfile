@@ -44,9 +44,12 @@ pipeline {
 
         stage('Updating Kubernetes deployment file'){
             steps {
-                  sh "cat deployment.yaml"
-                  sh "sed -i 's/${APP_NAME}.*/${APP_NAME}:${IMAGE_TAG}/g' deployment.yaml"
-                  sh "cat deployment.yaml"
+                script{
+                    sh "cat deployment.yaml"
+                    sh "sed -i "s|image: ${DOCKERHUB_USERNAME}/${APP_NAME}.*|image: ${DOCKERHUB_USERNAME}/${APP_NAME}:${IMAGE_TAG}|g" deployment.yaml"
+                    sh "cat deployment.yaml"
+               
+               } 
             }
         }
         stage("Kubernetes Deployment") {
