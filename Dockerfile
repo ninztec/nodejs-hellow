@@ -17,10 +17,17 @@ COPY . .
 # Stage 2: Create a smaller production image
 FROM node:12-alpine
 
+# Create a non-root user to run the application
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -u 1001 -S nodejs -G nodejs
+
 WORKDIR /usr/src/app
 
 # Copy the app from the previous stage
-COPY --from=build /usr/src/app .
+COPY --from=build --chown=nodejs:nodejs /usr/src/app .
+
+# Switch to the non-root user
+USER nodejs
 
 EXPOSE 8000
 
