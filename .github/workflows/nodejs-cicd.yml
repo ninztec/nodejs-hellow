@@ -19,8 +19,8 @@ jobs:
         docker image list
 
     - name: Docker Login
-      run: echo ${{ secrets.DOCKER_HUB_PASSWORD }} | docker login -u rjshk013 --password-stdin
-
+      run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+      
     - name: Push Image to Docker Hub
       run: docker push rjshk013/node-hellow:latest
 
