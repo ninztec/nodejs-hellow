@@ -1,11 +1,5 @@
 pipeline {
     agent any
-    environment{
-        DOCKERHUB_USERNAME = "rjshk013"
-        APP_NAME = "gitops-demo-app"
-        IMAGE_TAG = "${BUILD_NUMBER}"
-        IMAGE_NAME = "${DOCKERHUB_USERNAME}" + "/" + "${APP_NAME}"
-    }
     
     stages {
         stage("Git Clone") {
@@ -17,7 +11,7 @@ pipeline {
         stage("Build") {
             steps {
                 script {
-                    docker_image = docker.build "${IMAGE_NAME}"
+                    sh 'docker build . -t rjshk013/node-hellow:latest'
                     sh 'docker image list'
                 }
             }
@@ -36,28 +30,18 @@ pipeline {
         stage("Push Image to Docker Hub") {
             steps {
                 script {
-                        docker_image.push("${BUILD_NUMBER}")
-                        docker_image.push('latest')
+                    sh 'docker push rjshk013/node-hellow:latest'
                 }
             }
         }
 
-        stage('Updating Kubernetes deployment file'){
-            steps {
-                script{
-                    sh "cat deployment.yaml"
-                    sh "sed -i "s|image: ${DOCKERHUB_USERNAME}/${APP_NAME}.*|image: ${DOCKERHUB_USERNAME}/${APP_NAME}:${IMAGE_TAG}|g" deployment.yaml"
-                    sh "cat deployment.yaml"
-               
-               } 
-            }
-        }
         stage("Kubernetes Deployment") {
             steps {
                 script {
-                    sh 'sudo helm upgrade nodejs-app nodejs -f nodejs/dev-values.yaml'
+                    sh 'sudo kubectl apply -f deployment.yaml'
                 }
             }
         }
     }
 }
+
