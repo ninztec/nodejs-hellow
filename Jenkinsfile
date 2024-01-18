@@ -8,6 +8,18 @@ pipeline {
             }
         }
         
+        stage('OWASP Dependency') {
+            steps {
+                dependencyCheck additionalArguments: '--scan ./ ', odcInstallation: 'DC'
+                dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+            }
+        }
+        stage('Trivy FS') {
+            steps {
+               sh "trivy fs ."
+            }
+        }        
+        
         stage("Build") {
             steps {
                 script {
@@ -44,4 +56,3 @@ pipeline {
         }
     }
 }
-

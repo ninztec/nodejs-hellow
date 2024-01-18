@@ -8,18 +8,6 @@ pipeline {
             }
         }
         
-        stage('OWASP Dependency') {
-            steps {
-                dependencyCheck additionalArguments: '--scan ./ ', odcInstallation: 'DC'
-                dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
-            }
-        }
-        stage('Trivy FS') {
-            steps {
-               sh "trivy fs ."
-            }
-        }        
-        
         stage("Build") {
             steps {
                 script {
@@ -50,9 +38,10 @@ pipeline {
         stage("Kubernetes Deployment") {
             steps {
                 script {
-                    sh 'sudo kubectl apply -f deployment.yaml'
+                    sh 'sudo kubectl apply -f deployment.yaml -n multibranch'
                 }
             }
         }
     }
 }
+
